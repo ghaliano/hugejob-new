@@ -29,3 +29,7 @@ services:
     my_mailer:
         alias: App\Services\MyMailer
         public: true
+
+    calculator:
+        alias: App\Services\Calculator
+        public: true

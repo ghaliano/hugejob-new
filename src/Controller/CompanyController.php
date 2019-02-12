@@ -15,7 +15,7 @@ class CompanyController extends AbstractController
     public function index(MyMailer $mailer)
     {
 
-        $myMailer = $mailer->sendEmail();
+        $myMailer = $mailer->sendHelloEmail();
 
         return $this->render('company/index.html.twig', [
             'controller_name' => 'CompanyController',
