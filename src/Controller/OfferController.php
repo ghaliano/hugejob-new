@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use App\Entity\Offer;
 use App\Form\OfferType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -9,27 +10,31 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/offer")
- */
 class OfferController extends AbstractController
 {
     /**
      * @Route("/", name="offer_index", methods={"GET"})
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $offers = $this->getDoctrine()
+        $offers = $this
+            ->getDoctrine()
             ->getRepository(Offer::class)
-            ->findAll();
+            ->search($request->get('page', 1))
+        ;
 
         return $this->render('offer/index.html.twig', [
+            'companies' =>$this
+                ->getDoctrine()
+                ->getRepository(Company::class)
+                ->findAll(),
+            'pages' => count($offers),
             'offers' => $offers,
         ]);
     }
 
     /**
-     * @Route("/new", name="offer_new", methods={"GET","POST"})
+     * @Route("/offer/new", name="offer_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -52,17 +57,29 @@ class OfferController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="offer_show", methods={"GET"})
+     * @Route("/offer/{id}", name="offer_show", methods={"GET"})
      */
-    public function show(Offer $offer): Response
+    public function show(int $id, Request $request): Response
     {
+        $offer = $this
+            ->getDoctrine()
+            ->getRepository(Offer::class)
+            ->find($id)
+        ;
+
+        if (!$offer) {
+            $this->addFlash('warning', "Attention !");
+            $this->addFlash('warning', "Offre n'existe pas");
+            return $this->redirectToRoute('offer_index');
+        }
+
         return $this->render('offer/show.html.twig', [
             'offer' => $offer,
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="offer_edit", methods={"GET","POST"})
+     * @Route("/offer/{id}/edit", name="offer_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Offer $offer): Response
     {
@@ -84,7 +101,7 @@ class OfferController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="offer_delete", methods={"DELETE"})
+     * @Route("/offer/{id}", name="offer_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Offer $offer): Response
     {

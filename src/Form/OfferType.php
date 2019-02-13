@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\Offer;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,11 +16,14 @@ class OfferType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('createdAt')
-            ->add('expireAt')
+            ->add('startAt', DateType::class, [
+                'widget' => 'single_text'
+            ])
+            ->add('expireAt', DateType::class, [
+                'widget' => 'single_text'
+            ])
             ->add('company')
-            ->add('user')
-        ;
+            ->add('user');
     }
 
     public function configureOptions(OptionsResolver $resolver)

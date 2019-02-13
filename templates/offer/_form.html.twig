@@ -1,4 +1,21 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.description) }}
+<div class="form-group row">
+    {{ form_label(form.startAt) }}
+    <div class="col-sm-10">
+        <div class="row">
+            <div class="col-sm-6">
+                {{ form_widget(form.startAt) }}
+            </div>
+            <div class="col-sm-6">
+                {{ form_widget(form.expireAt) }}
+            </div>
+        </div>
+    </div>
+</div>
+    {{ form_row(form.company) }}
+    {{ form_row(form.user) }}
+    {{ form_rest(form) }}
     <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

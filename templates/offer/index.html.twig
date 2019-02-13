@@ -3,39 +3,84 @@
 {% block title %}Offer index{% endblock %}
 
 {% block body %}
-    <h1>Offer index</h1>
+    <div class="container">
+        <div class="row">
+            <div class="card-columns">
+                {% for offer in offers %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-9 col-xs-9">
+                                    <h4 class="card-title">{{ offer.company.name }}</h4>
+                                </div>
+                                <div class="col-sm-3 col-xs-3">
+                                    <img class="img-fluid logo" src="http://placehold.it/50x50?text=LOGO">
+                                </div>
+                                <div class="col-sm-12">
+                                    <small class="text-muted">
+                                        <a href="{{ path('offer_show', {id: offer.id}) }}"><strong>{{ offer.name }}</strong></a>
+                                    </small>
+                                </div>
+                            </div>
+                            <p class="card-text">{{ offer.description }}</p>
+                            <p class="card-text text-right">
+                                <small class="text-muted">
+            <span class="social">
+              <a href="#!">
+                <i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i>
+              </a>
+              <a href="#!">
+                <i class="fa fa-twitter-square fa-2x" aria-hidden="true"></i>
+              </a>
+              <a href="#!">
+                <i class="fa fa-pinterest-square fa-2x" aria-hidden="true"></i>
+              </a>
+              <a href="#!">
+                <i class="fa fa-instagram fa-2x" aria-hidden="true"></i>
+              </a>
+            </span>
+                                </small>
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% for page in range(1, pages) %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ path('offer_index', {page: page}) }}">
+                            {{ page }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+        <hr/>
+        <div id="recipeCarousel" class="carousel slide w-100" data-ride="carousel">
+            <div class="carousel-inner w-100" role="listbox">
+                {% for company in companies %}
+                    {% if  loop.index%4 == 1 %}
+                        <div class="carousel-item row no-gutters {% if loop.index<4 %}active{% endif %}">
+                    {% endif %}
+                    <div class="col-3 float-left">
+                        <img class="img-fluid" src="http://placehold.it/350x280/222/fff?text={{ company.name }}">
+                    </div>
+                    {% if not loop.index%4 %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <a class="carousel-control-prev" href="#recipeCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#recipeCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>CreatedAt</th>
-                <th>ExpireAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for offer in offers %}
-            <tr>
-                <td>{{ offer.id }}</td>
-                <td>{{ offer.name }}</td>
-                <td>{{ offer.description }}</td>
-                <td>{{ offer.createdAt ? offer.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ offer.expireAt ? offer.expireAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('offer_show', {'id': offer.id}) }}">show</a>
-                    <a href="{{ path('offer_edit', {'id': offer.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('offer_new') }}">Create new</a>
 {% endblock %}

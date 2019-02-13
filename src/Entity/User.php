@@ -83,5 +83,8 @@ class User
         return $this;
     }
 
-
+    public function __toString()
+    {
+        return (string) $this->firstname . " " . $this->lastname;
+    }
 }

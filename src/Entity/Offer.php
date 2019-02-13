@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Offer
  *
  * @ORM\Table(name="offer", indexes={@ORM\Index(name="fk_job_company1_idx", columns={"company_id"}), @ORM\Index(name="fk_job_user1_idx", columns={"user_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\OfferRepository")
  */
 class Offer
 {
@@ -56,6 +56,7 @@ class Offer
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="company_id", referencedColumnName="id", nullable=true)
      * })
+     * @Assert\NotBlank(message="Ce champs estoligatoire")
      */
     private $company;
 
@@ -68,6 +69,11 @@ class Offer
      * })
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $startAt;
 
     public function getId(): ?int
     {
@@ -142,6 +148,18 @@ class Offer
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getStartAt(): ?\DateTimeInterface
+    {
+        return $this->startAt;
+    }
+
+    public function setStartAt(?\DateTimeInterface $startAt): self
+    {
+        $this->startAt = $startAt;
 
         return $this;
     }
