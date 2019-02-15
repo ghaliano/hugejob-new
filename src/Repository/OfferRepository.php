@@ -14,12 +14,23 @@ class OfferRepository extends ServiceEntityRepository
         parent::__construct($registry, Offer::class);
     }
 
-    public function search($page){
-        $qb = $this->createQueryBuilder('offer');
+    public function search($filters){
+        $qb = $this->createQueryBuilder('s');
+        $qb->select('s');
+
+        if (isset($filters['term'])){
+            $qb->andWhere('s.name like :term');
+            $qb->setParameter('term', '%'.$filters['term'].'%');
+        }
+
+        if (isset($filters['companies'])){
+            $qb->andWhere('s.company IN (:company)');
+            $qb->setParameter('company', $filters['companies']);
+        }
+
         $qb
-            ->select('offer')
-            ->setFirstResult($page-1)
-            ->setMaxResults(1)
+            ->setFirstResult(0)
+            ->setMaxResults(20)
         ;
 
         return new Paginator($qb);

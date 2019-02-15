@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Company;
 use App\Entity\Offer;
+use App\Form\OfferFilterType;
 use App\Form\OfferType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,19 +18,21 @@ class OfferController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $offers = $this
-            ->getDoctrine()
-            ->getRepository(Offer::class)
-            ->search($request->get('page', 1))
-        ;
-
+        $offers = $this->fetchOffers($request->get('filter'));
+        $form = $this->createForm(
+            OfferFilterType::class,
+            null,
+            ['method' => 'GET']
+        );
+        $form->handleRequest($request);
+        /*print '<pre>';
+        print_r($request->get('filter'));
+        print '</pre>';*/
         return $this->render('offer/index.html.twig', [
-            'companies' =>$this
-                ->getDoctrine()
-                ->getRepository(Company::class)
-                ->findAll(),
+            'companies' => $this->fetchCompanies(),
             'pages' => count($offers),
             'offers' => $offers,
+            'form' => $form->createView()
         ]);
     }
 
@@ -112,5 +115,21 @@ class OfferController extends AbstractController
         }
 
         return $this->redirectToRoute('offer_index');
+    }
+
+    private function fetchOffers($filters){
+        return $this
+            ->getDoctrine()
+            ->getRepository(Offer::class)
+            ->search($filters)
+        ;
+    }
+
+    private function fetchCompanies(){
+        return $this
+            ->getDoctrine()
+            ->getRepository(Company::class)
+            ->findAll()
+        ;
     }
 }

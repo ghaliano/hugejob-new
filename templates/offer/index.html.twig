@@ -5,6 +5,10 @@
 {% block body %}
     <div class="container">
         <div class="row">
+            <div class="col-md-12">{{ form (form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
+
+        </div>
+        <div class="row">
             <div class="card-columns">
                 {% for offer in offers %}
                     <div class="card">
@@ -65,7 +69,9 @@
                         <div class="carousel-item row no-gutters {% if loop.index<4 %}active{% endif %}">
                     {% endif %}
                     <div class="col-3 float-left">
-                        <img class="img-fluid" src="http://placehold.it/350x280/222/fff?text={{ company.name }}">
+                        <a href="{{ path('offer_index', {filter: {companies: [company.id]}}) }}">
+                            <img class="img-fluid" src="http://placehold.it/350x280/222/fff?text={{ company.name }}">
+                        </a>
                     </div>
                     {% if not loop.index%4 %}
                         </div>
