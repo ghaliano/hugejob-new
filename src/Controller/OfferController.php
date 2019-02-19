@@ -42,7 +42,12 @@ class OfferController extends AbstractController
     public function new(Request $request): Response
     {
         $offer = new Offer();
-        $form = $this->createForm(OfferType::class, $offer);
+        $offer->setUser($this->getUser());
+        $form = $this->createForm(
+            OfferType::class,
+            $offer,
+            []
+            );
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

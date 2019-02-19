@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use phpDocumentor\Reflection\Types\Boolean;
 use Serializable;
@@ -17,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @UniqueEntity("email")
  * @UniqueEntity("username")
  */
-class User implements UserInterface, \Serializable
+class User implements UserInterface, Serializable
 {
 
     /**
@@ -62,12 +63,6 @@ class User implements UserInterface, \Serializable
      */
     private $plainPassword;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="salt", type="string", length=255)
-     */
-    private $salt;
 
     /**
      * @var string|null
@@ -87,9 +82,66 @@ class User implements UserInterface, \Serializable
      * */
     private $enable = false;
 
+    /**
+     * @var string|null
+     * @ORM\Column(name="roles", type="string", length=255, nullable=true)
+     *
+     */
+    private $roles;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Company", mappedBy="user", cascade={"persist"})
+     */
+    private $companies ;
+
+    public function __construct()
+    {
+        $this->companies = new ArrayCollection();
+
+    }
+
+    /**
+     * @return mixed
+     */
+    public function addCompany(Company $company)
+    {
+        $company->setUser($this);
+        $this->companies[] = $company;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompanies()
+    {
+        return $this->companies;
+    }
+
+    /**
+     * @param mixed $companies
+     */
+    public function setCompanies($companies): void
+    {
+        $this->companies = $companies;
+    }
+
+
+
     public function getRoles()
     {
-        return [];
+        return json_decode($this->roles);
+    }
+
+    public function setRoles($roles)
+    {
+         $this->roles  = json_encode($roles) ;
+    }
+
+    public function addRole($role){
+        $roles = $this->getRoles();
+        $roles[] = $role;
+        $this->setRoles($roles);
     }
 
     public function getPlainPassword()
@@ -102,21 +154,9 @@ class User implements UserInterface, \Serializable
         return $this->password;
     }
 
-    public function getSalt()
-    {
-        return $this->salt;
-    }
-
     public function setPlainPassword($plainPassword)
     {
         $this->plainPassword = $plainPassword;
-
-        return $this;
-    }
-
-    public function setSalt($salt)
-    {
-        $this->salt = $salt;
 
         return $this;
     }
@@ -185,14 +225,12 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-
     public function serialize()
     {
         return serialize(array(
             $this->id,
-            $this->username,
             $this->password,
-            $this->salt
+            $this->username
         ));
     }
 
@@ -200,9 +238,8 @@ class User implements UserInterface, \Serializable
     {
         list (
             $this->id,
-            $this->username,
             $this->password,
-            $this->salt
+            $this->username
             ) = unserialize($serialized);
     }
 
@@ -231,5 +268,9 @@ class User implements UserInterface, \Serializable
         $this->enable = $enable;
 
         return $this;
+    }
+
+    public function getSalt(){
+
     }
 }

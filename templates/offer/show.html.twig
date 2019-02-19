@@ -33,6 +33,6 @@
     <a href="{{ path('offer_index') }}">back to list</a>
 
     <a href="{{ path('offer_edit', {'id': offer.id}) }}">edit</a>
-
+    <a href="{{ path('apply',{'id':offer.id}) }}" class="btn btn-success">postuler</a>
     {{ include('offer/_delete_form.html.twig') }}
 {% endblock %}

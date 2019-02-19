@@ -25,5 +25,4 @@ class ForgotPwd
     public function setEmail($email): void
     {
         $this->email = $email;
-    }
-}
+    }}

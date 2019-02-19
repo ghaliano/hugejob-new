@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\DateType;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -64,6 +65,10 @@ class Application
      * })
      */
     private $user;
+    public function __construct()
+    {
+        $this->createdAt=new \DateTime();
+    }
 
     public function getId(): ?int
     {

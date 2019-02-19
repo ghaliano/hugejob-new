@@ -33,3 +33,7 @@ services:
     calculator:
         alias: App\Services\Calculator
         public: true
+
+    user_service:
+        alias: App\Services\UserService
+        public: true

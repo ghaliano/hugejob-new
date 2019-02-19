@@ -16,6 +16,9 @@ security:
             security: false
         main:
             anonymous: true
+            logout:
+                path: /se-deconnecter
+                target: /login
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
@@ -31,5 +34,9 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/changePwd, roles: IS_AUTHENTICATED_FULLY }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/offer/new, roles: ROLE_RECRUITER }
+        - { path: ^/offer/edit, roles: ROLE_RECRUITER }
+        - { path: ^/application/*, roles: ROLE_CANDIDATE }

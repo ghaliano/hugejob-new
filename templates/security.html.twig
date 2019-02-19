@@ -1,23 +1,31 @@
-<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
-    {% block stylesheets %}{% endblock %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css"
           integrity="sha384-PDle/QlgIONtM1aqA2Qemk5gPOE7wFq8+Em+G/hmo5Iq0CCmYZLv3fVRDJ4MMwEA" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/main.css"/>
+    <link rel="stylesheet" href="assets/css/signin.css"/>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.min.js"
             integrity="sha384-7aThvCh9TypR7fIc2HV4O/nFMVCBwyIUKL8XCtKE+8xgCgl/PQGuFsvShjr74PBp"
             crossorigin="anonymous"></script>
-
 </head>
-<body>
-{% include 'navbar.html.twig' %}
-{% include 'flash.html.twig' %}
-{% block body %}{% endblock %}
-{% block javascripts %}{% endblock %}
+
+<body class="text-center">
+<div class="container">
+    {% block top %}
+    <div class="row">
+        <div class="col-12">
+        {% include 'flash.html.twig' %}
+        {% include 'navbar.html.twig' %}
+        </div>
+    </div>
+    {% endblock %}
+    <div class="row">
+        {% block body %}
+        {% endblock %}
+    </div>
+</div>
+
 </body>
 </html>
