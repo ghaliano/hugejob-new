@@ -1,0 +1,7 @@
+App\Entity\User:
+  user_{1..10}:
+    firstname: <firstname()>
+    lastname: <lastname()>
+    email: <email()>
+    plainPassword: "123456"
+    username: <username()>

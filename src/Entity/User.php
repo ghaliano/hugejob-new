@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 use phpDocumentor\Reflection\Types\Boolean;
 use Serializable;
@@ -9,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * User
@@ -27,6 +29,7 @@ class User implements UserInterface, Serializable
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups("publication_list")
      */
     private $id;
 
@@ -43,6 +46,7 @@ class User implements UserInterface, Serializable
      * @var string|null
      *
      * @ORM\Column(name="firstname", type="string", length=45, nullable=true)
+     * @Groups("publication_list")
      */
     private $firstname;
 
@@ -50,6 +54,7 @@ class User implements UserInterface, Serializable
      * @var string|null
      *
      * @ORM\Column(name="lastname", type="string", length=45, nullable=true)
+     * @Groups("publication_list")
      */
     private $lastname;
 
@@ -94,9 +99,27 @@ class User implements UserInterface, Serializable
      */
     private $companies ;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Publication", mappedBy="user")
+     */
+    private $publications;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Feed", mappedBy="user")
+     */
+    private $feeds;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user")
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->companies = new ArrayCollection();
+        $this->publications = new ArrayCollection();
+        $this->feeds = new ArrayCollection();
+        $this->comments = new ArrayCollection();
 
     }
 
@@ -272,5 +295,98 @@ class User implements UserInterface, Serializable
 
     public function getSalt(){
 
+    }
+
+    /**
+     * @return Collection|Publication[]
+     */
+    public function getPublications(): Collection
+    {
+        return $this->publications;
+    }
+
+    public function addPublication(Publication $publication): self
+    {
+        if (!$this->publications->contains($publication)) {
+            $this->publications[] = $publication;
+            $publication->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePublication(Publication $publication): self
+    {
+        if ($this->publications->contains($publication)) {
+            $this->publications->removeElement($publication);
+            // set the owning side to null (unless already changed)
+            if ($publication->getUser() === $this) {
+                $publication->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Feed[]
+     */
+    public function getFeeds(): Collection
+    {
+        return $this->feeds;
+    }
+
+    public function addFeed(Feed $feed): self
+    {
+        if (!$this->feeds->contains($feed)) {
+            $this->feeds[] = $feed;
+            $feed->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeed(Feed $feed): self
+    {
+        if ($this->feeds->contains($feed)) {
+            $this->feeds->removeElement($feed);
+            // set the owning side to null (unless already changed)
+            if ($feed->getUser() === $this) {
+                $feed->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
