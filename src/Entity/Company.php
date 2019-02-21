@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Entity;
-
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Company
+ * @ApiResource
  *
  * @ORM\Table(name="company", indexes={@ORM\Index(name="fk_company_user1_idx", columns={"user_id"})})
  * @ORM\Entity
@@ -14,7 +15,7 @@ class Company
 {
     /**
      * @var int
-     *
+     * @Groups("offer_read")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -23,7 +24,7 @@ class Company
 
     /**
      * @var string|null
-     *
+     * @Groups("offer_read")
      * @ORM\Column(name="name", type="string", length=45, nullable=true)
      */
     private $name;

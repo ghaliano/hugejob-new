@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -14,7 +15,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * User
- *
+ * @ApiResource(
+ *     normalizationContext={"groups"={"user_list"}}
+ * )
  * @ORM\Table(name="user")
  * @ORM\Entity
  * @UniqueEntity("email")
@@ -29,7 +32,7 @@ class User implements UserInterface, Serializable
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Groups("publication_list")
+     * @Groups({"publication_list","user_list"})
      */
     private $id;
 
@@ -38,6 +41,7 @@ class User implements UserInterface, Serializable
      * @Assert\NotBlank
      * @Assert\Email(message="email invalide")
      * @ORM\Column(name="email", type="string", unique=true, length=255, nullable=true)
+     * @Groups({"user_list"})
      */
 
     private $email;
@@ -46,7 +50,7 @@ class User implements UserInterface, Serializable
      * @var string|null
      *
      * @ORM\Column(name="firstname", type="string", length=45, nullable=true)
-     * @Groups("publication_list")
+     * @Groups({"publication_list","user_list"})
      */
     private $firstname;
 
@@ -54,7 +58,7 @@ class User implements UserInterface, Serializable
      * @var string|null
      *
      * @ORM\Column(name="lastname", type="string", length=45, nullable=true)
-     * @Groups("publication_list")
+     * @Groups({"publication_list","user_list"})
      */
     private $lastname;
 

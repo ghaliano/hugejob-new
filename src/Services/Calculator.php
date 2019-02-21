@@ -10,7 +10,12 @@ class Calculator{
     public function add($a, $b){return $a+$b;}
     public function substruct($a, $b){return $a-$b;}
     public function multiply($a, $b){return $a*$b;}
-    public function divide($a, $b){return $a/$b;}
+    public function divide($a, $b){
+        if ($b === 0){
+            return false;
+        }
+        return $a/$b;
+    }
 
     public function calculate(\App\Entity\Calculator $calculator){
         $a= $calculator->getA();

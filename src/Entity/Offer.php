@@ -1,12 +1,17 @@
 <?php
 
 namespace App\Entity;
-
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 /**
  * Offer
- *
+ * @ApiResource(
+ *     normalizationContext={"groups"={"offer_read"}},
+ *     denormalizationContext={"groups"={"offer_write"}}
+ * )
  * @ORM\Table(name="offer", indexes={@ORM\Index(name="fk_job_company1_idx", columns={"company_id"}), @ORM\Index(name="fk_job_user1_idx", columns={"user_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\OfferRepository")
  */
@@ -14,7 +19,7 @@ class Offer
 {
     /**
      * @var int
-     *
+     * @Groups("offer_read")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -22,6 +27,7 @@ class Offer
     private $id;
 
     /**
+     * @Groups({"offer_write","offer_read"})
      * @var string|null
      *
      * @ORM\Column(name="name", type="string", length=255, nullable=true)
@@ -29,6 +35,7 @@ class Offer
     private $name;
 
     /**
+     * @Groups({"offer_write","offer_read"})
      * @var string|null
      *
      * @ORM\Column(name="description", type="text", length=65535, nullable=true)
@@ -36,6 +43,7 @@ class Offer
     private $description;
 
     /**
+     * @Groups("offer_write")
      * @var \DateTime|null
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -43,6 +51,7 @@ class Offer
     private $createdAt;
 
     /**
+     * @Groups({"offer_write","offer_read"})
      * @var \DateTime|null
      *
      * @ORM\Column(name="expire_at", type="datetime", nullable=true)
@@ -50,6 +59,7 @@ class Offer
     private $expireAt;
 
     /**
+     * @Groups({"offer_write","offer_read"})
      * @var \Company
      *
      * @ORM\ManyToOne(targetEntity="Company")

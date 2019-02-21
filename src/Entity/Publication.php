@@ -1,13 +1,17 @@
 <?php
 
 namespace App\Entity;
-
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
+ * @ApiResource(
+ *     normalizationContext={"groups"={"publication_list"}},
+ *     denormalizationContext={"groups"={"publication_edit"}}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\PublicationRepository")
  */
 class Publication
@@ -28,7 +32,7 @@ class Publication
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups("publication_list")
+     * @Groups({"publication_list","publication_edit"})
      */
     private $content;
 
